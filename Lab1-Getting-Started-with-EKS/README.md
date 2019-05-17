@@ -28,7 +28,7 @@ to configure your credentials and region where you run EKS Cluster.
 
 Kubernetes uses a command-line utility called kubectl for communicating with the cluster API server. Amazon EKS clusters also require the AWS IAM Authenticator for Kubernetes to allow IAM authentication for your Kubernetes cluster. Beginning with Kubernetes version 1.10, you can configure the kubectl client to work with Amazon EKS by installing the AWS IAM Authenticator for Kubernetes and modifying your kubectl configuration file to use it for authentication. 
 
-**install kubectl**
+**Install kubectl**
 
    ```bash
    mkdir $HOME/bin
@@ -111,11 +111,13 @@ The script requires about 15 minutes to complete. Meanwhile you can go to lab 2 
 
 ## 4.Test the cluster
 
-Test your configuration. You should see a kubernetes svc as an output.
+Test your configuration. 
 
 ```
 kubectl get svc
 ```
+
+You should see a kubernetes svc as an output.
 
 ```
 kubectl get nodes

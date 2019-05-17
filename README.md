@@ -4,7 +4,7 @@
 
 ## Overview
 
-This lab introduces the basics of working with microservices and [EKS](https://aws.amazon.com/eks/). This includes: setting up the initial EKS cluster, deploying the sample application, service discovery via Route53 and deployment of the containers with traffic routed through via AWS App Mesh. The sample application that will be running on EKS requires a couple Docker images built and placed in an ECR repository that your EKS cluster has access to.
+This lab introduces the basics of working with microservices and [EKS](https://aws.amazon.com/eks/). This includes: setting up the initial EKS cluster, deploying the sample application, service discovery and deployment of the containers with traffic routed through via AWS App Mesh. The sample application that will be running on EKS requires a couple Docker images built and placed in an ECR repository that your EKS cluster has access to.
 
 **Note**: You should have containers and Docker knowledge before attempting this lab. You should know the basics of creating a Docker file and a Docker image, and checking in the image into a Docker registry. Otherwise, please complete part 1 and 2 of the [Get Started with Docker tutorial](https://docs.docker.com/get-started/).
 
