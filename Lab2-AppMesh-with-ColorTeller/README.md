@@ -1,6 +1,6 @@
 This lab builds upon lab 1
 
-## 7. Build the Docker Images and push them to ECR
+## 5. Build the Docker Images and push them to ECR
 
 First create the ECR repositories for the 2 applications.
 
@@ -38,7 +38,7 @@ docker build -t 284245693010.dkr.ecr.ap-southeast-1.amazonaws.com/colorgateway .
 docker push 284245693010.dkr.ecr.ap-southeast-1.amazonaws.com/colorgateway:latest
 ```
 
-## 8. Create AppMesh and the required configuration
+## 6. Create AppMesh and the required configuration
 
 The following diagram represents the abstract view in terms of App Mesh resources:
 
@@ -273,7 +273,7 @@ aws appmesh create-virtual-service --mesh-name APP_MESH_DEMO --cli-input-json '{
 
 Up to this point, we’ve created all required components of the app mesh (vitual services, virtual nodes, virtual routers, and routes) to support our application.
 
-## 9. Create AppMesh and the required configuration
+## 7. Create AppMesh and the required configuration
 
 To deploy the app, download color.yaml and and deploy it.
 
@@ -298,7 +298,7 @@ kubectl get pods
 
 ```
 
-## 9. Test the application
+## 8. Test the application
 
 In the terminal, run the following command to connect to the curler pod with a bash shell:
 
@@ -352,9 +352,14 @@ aws appmesh update-route  --mesh-name APP_MESH_DEMO --cli-input-json '{
 
 If you look at the curler terminal, you should now see an equal distribution of traffic to the blue, red, and black virtual nodes. This shows that App Mesh is now controlling the distribution of traffic!
 
-## 10. Lab Cleanup
+## 9. Lab Cleanup
 
-To clean up the lab, please delete the CloudFromation stacks in the console.
+To clean up the lab, please delete using the following command
+
+```
+eksctl delete cluster --name=<name> --region=ap-southeast-1
+
+```
 
 
 
