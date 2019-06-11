@@ -15,9 +15,25 @@ If you use Cloud9, then ensure you go to > Preferences -> AWS Settings -> Turn o
 
 [img1]:https://github.com/tohwsw/aws-eks-workshop/blob/master/Lab1-Getting-Started-with-EKS/img/c9disableiam.png
 
-In the IAM console, create a user with AdministratorAccess for the purpose of this lab. Note down the access key and secret. 
-**IMPORTANT!** 
-Do not share the secret key with anyone!
+In the IAM console, create a user with AdministratorAccess for the purpose of this lab. 
+
+- Follow this link https://console.aws.amazon.com/iam/home#/roles$new?step=review&commonUseCase=EC2%2BEC2&selectedUseCase=EC2&policies=arn:aws:iam::aws:policy%2FAdministratorAccess to create an IAM role with Administrator access.
+- Confirm that AWS service and EC2 are selected, then click Next to view permissions.
+- Confirm that AdministratorAccess is checked, then click Next to review.
+- Enter eksworkshop-admin for the Name, and select Create Role
+
+![img2]
+
+[img2]:https://github.com/tohwsw/aws-eks-workshop/blob/master/Lab1-Getting-Started-with-EKS/img/createrole.png
+
+Next attach the IAM role to your workspace
+
+- Follow this deep link https://console.aws.amazon.com/ec2/v2/home?#Instances:tag:Name=aws-cloud9-eksworkshop*;sort=desc:launchTime to find your Cloud9 EC2 instance
+- Select the instance, then choose Actions / Instance Settings / Attach/Replace IAM Role
+
+![img3]
+
+[img3]:https://github.com/tohwsw/aws-eks-workshop/blob/master/Lab1-Getting-Started-with-EKS/img/c9instancerole.png
 
 Go back to your Cloud9 terminal and run 
 
