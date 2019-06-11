@@ -28,19 +28,13 @@ In the IAM console, create a user with AdministratorAccess for the purpose of th
 
 Next attach the IAM role to your workspace
 
-- Follow this deep link https://console.aws.amazon.com/ec2/v2/home?#Instances:tag:Name=aws-cloud9-eksworkshop*;sort=desc:launchTime to find your Cloud9 EC2 instance
+- Follow this deep link https://console.aws.amazon.com/ec2/v2/home?#Instances:sort=desc:launchTime to find your Cloud9 EC2 instance
 - Select the instance, then choose Actions / Instance Settings / Attach/Replace IAM Role
 
 ![img3]
 
 [img3]:https://github.com/tohwsw/aws-eks-workshop/blob/master/Lab1-Getting-Started-with-EKS/img/c9instancerole.png
 
-Go back to your Cloud9 terminal and run 
-
-```bash
-  aws configure
-```
-to configure your credentials and region where you run EKS Cluster.
 
 Kubernetes uses a command-line utility called kubectl for communicating with the cluster API server. Amazon EKS clusters also require the AWS IAM Authenticator for Kubernetes to allow IAM authentication for your Kubernetes cluster. Beginning with Kubernetes version 1.10, you can configure the kubectl client to work with Amazon EKS by installing the AWS IAM Authenticator for Kubernetes and modifying your kubectl configuration file to use it for authentication. 
 
