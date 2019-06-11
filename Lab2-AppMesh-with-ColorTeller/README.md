@@ -285,12 +285,6 @@ curl -O https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-Ap
 kubectl apply -f colorapp.yaml
 ```
 
-In addition to deploying the application, we’ll also deploy Curler, which is a simple image that provide curl functionality. To deploy the curler pods, copy and paste the following:
-
-```
-kubectl run -it curler --image=tutum/curl /bin/bash
-```
-
 You can verify that the pods are running properly.
 
 ```
@@ -299,6 +293,8 @@ kubectl get pods
 ```
 
 ## 8. Test the application
+
+In addition to deploying the application, we’ll also deploy Curler, which is a simple image that provide curl functionality. To deploy the curler pods, copy and paste the following:
 
 In the terminal, run the following command to connect to the curler pod with a bash shell:
 

@@ -35,6 +35,12 @@ Next attach the IAM role to your workspace
 
 [img3]:https://github.com/tohwsw/aws-eks-workshop/blob/master/Lab1-Getting-Started-with-EKS/img/c9instancerole.png
 
+Next configure the region **ap-southeast-1** running aws configure. You can leave the key and secret as None.
+
+```
+aws configure
+
+```
 
 Kubernetes uses a command-line utility called kubectl for communicating with the cluster API server. Amazon EKS clusters also require the AWS IAM Authenticator for Kubernetes to allow IAM authentication for your Kubernetes cluster. Beginning with Kubernetes version 1.10, you can configure the kubectl client to work with Amazon EKS by installing the AWS IAM Authenticator for Kubernetes and modifying your kubectl configuration file to use it for authentication. 
 
