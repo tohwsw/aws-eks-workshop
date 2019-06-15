@@ -4,12 +4,15 @@ metadata:
   name: colorgateway
   labels:
     app: colorgateway
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
 spec:
   ports:
-  - port: 9080
+  - port: 80
     name: http
   selector:
     app: colorgateway
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,10 +34,10 @@ spec:
         - name: colorgateway
           image: "284245693010.dkr.ecr.ap-southeast-1.amazonaws.com/colorgateway:latest"
           ports:
-            - containerPort: 9080
+            - containerPort: 80
           env:
             - name: "SERVER_PORT"
-              value: "9080"
+              value: "80"
             - name: "COLOR_TELLER_ENDPOINT"
               value: "colorteller.default.svc.cluster.local:9080"
             - name: "TCP_ECHO_ENDPOINT"

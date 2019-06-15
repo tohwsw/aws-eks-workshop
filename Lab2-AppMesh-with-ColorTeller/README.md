@@ -271,13 +271,21 @@ aws appmesh create-virtual-service --mesh-name APP_MESH_DEMO --cli-input-json '{
 
 ```
 
-Up to this point, we’ve created all required components of the app mesh (vitual services, virtual nodes, virtual routers, and routes) to support our application.
+Up to this point, we’ve created all required components of the app mesh (virtual services, virtual nodes, virtual routers, and routes) to support our application.
 
 ## 7. Create AppMesh and the required configuration
 
 To deploy the app, download color.yaml and and deploy it.
 
 **Important** You will need to update color.yaml with the ECR respository uri of your colorgateway and colorteller docker images.
+You can do so by substituting the account id 284245693010 with your own.
+
+```
+sed 's/284245693010/<your account id>/g' colorapp.yaml
+
+```
+
+Next, deploy the applications.
 
 ```
 curl -O https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/colorapp.yaml
@@ -292,20 +300,20 @@ kubectl get pods
 
 ```
 
+
 ## 8. Test the application
 
-In addition to deploying the application, we’ll also deploy Curler, which is a simple image that provide curl functionality. To deploy the curler pods, copy and paste the following:
-
-In the terminal, run the following command to connect to the curler pod with a bash shell:
+A network load balancer is also deployed. Identify the address of the elb via the command.
 
 ```
-kubectl run -it curler --image=tutum/curl /bin/bash
+kubectl get svc -o wide |grep colorgateway
 ```
 
-Next, with a shell open to the curler pod, paste the following to repeatedly request the colorgateway service:
+
+Next, paste the following to repeatedly request the colorgateway service. Remember to replace the address of the elb with your own.
 
 ```
-while [ 1 ]; do  curl -s --connect-timeout 2 http://colorgateway.default.svc.cluster.local:9080/color;echo;sleep 1; done
+while [ 1 ]; do  curl -s --connect-timeout 2 http://ab384758a8e8a11e9ad6f0659aee8bfc-b3971974e877d5fd.elb.ap-southeast-1.amazonaws.com:/color;echo;sleep 1; done
 ```
 
 Every second, you should see the response white.
