@@ -80,13 +80,13 @@ sudo mv /tmp/eksctl /usr/local/bin
 Create a basic EKS cluster
 
 ```
-eksctl create cluster --name=<your cluster name> --region ap-southeast-1
+eksctl create cluster --name=<your cluster name> --region ap-southeast-1 --node-type t3.medium
 
 ```
 
 A cluster will be created with default parameters
 
-  - 2x m5.large nodes (this instance type suits most common use-cases, and is good value for money)
+  - 2x t3.medium nodes 
   - use official AWS EKS AMI
   - ap-southeast-1 region
   - dedicated VPC (check your quotas)
