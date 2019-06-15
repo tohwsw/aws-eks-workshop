@@ -277,6 +277,10 @@ Up to this point, we’ve created all required components of the app mesh (virtu
 
 To deploy the app, download color.yaml and and deploy it.
 
+```
+curl -O https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/colorapp.yaml
+```
+
 **Important** You will need to update color.yaml with the ECR respository uri of your colorgateway and colorteller docker images.
 You can do so by substituting the account id 284245693010 with your own.
 
@@ -287,9 +291,8 @@ sed 's/284245693010/<your account id>/g' colorapp.yaml
 
 Next, deploy the applications.
 
-```
-curl -O https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/colorapp.yaml
 
+```
 kubectl apply -f colorapp.yaml
 ```
 
