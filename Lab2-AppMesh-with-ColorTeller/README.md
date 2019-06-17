@@ -313,7 +313,7 @@ kubectl get svc -o wide |grep colorgateway
 ```
 
 
-Next, paste the following to repeatedly request the colorgateway service. Remember to replace the address of the elb with your own.
+Next, paste the following to repeatedly request the colorgateway service. Remember to replace the address of the elb with your own. Do note that the elb might take a few minutes to become active.
 
 ```
 while [ 1 ]; do  curl -s --connect-timeout 2 http://ab384758a8e8a11e9ad6f0659aee8bfc-b3971974e877d5fd.elb.ap-southeast-1.amazonaws.com:/color;echo;sleep 1; done
@@ -369,7 +369,9 @@ eksctl delete cluster --name=<name> --region=ap-southeast-1
 ```
 
 
+## 10. Optional Labs
 
+There are more labs hosted at https://eksworkshop.com/. Do check them out!
 
 
 
