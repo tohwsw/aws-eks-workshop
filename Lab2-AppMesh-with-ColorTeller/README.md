@@ -289,7 +289,7 @@ curl -O https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-Ap
 You can do so by substituting the account id 284245693010 with your own.
 
 ```
-sed 's/284245693010/<your account id>/g' colorapp.yaml
+sed -i 's/284245693010/<your account id>/g' colorapp.yaml
 
 ```
 
