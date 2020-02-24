@@ -75,6 +75,11 @@ kubectl label namespace default appmesh.k8s.aws/sidecarInjectorWebhook=enabled
 
 ```
 
+IAM
+
+Add IAM managed policy AWSAppMeshFullAccess the eks nodegroup role.
+
+
 ## 6. Create AppMesh and the required configuration
 
 The following diagram represents the abstract view in terms of App Mesh resources:
