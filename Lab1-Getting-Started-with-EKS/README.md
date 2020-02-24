@@ -64,7 +64,7 @@ Kubernetes uses a command-line utility called kubectl for communicating with the
 
    ```bash
    mkdir $HOME/bin
-   curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/kubectl
+   curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/kubectl
    chmod +x ./kubectl
    cp ./kubectl $HOME/bin/kubectl
    export PATH=$HOME/bin:$PATH
@@ -75,12 +75,12 @@ Kubernetes uses a command-line utility called kubectl for communicating with the
 **Install IAM Authenticator**
 
    ```bash
-   curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
+   curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.14.6/2019-08-22/bin/linux/amd64/aws-iam-authenticator
    chmod +x ./aws-iam-authenticator
    cp ./aws-iam-authenticator $HOME/bin
    export PATH=$HOME/bin:$PATH
    echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
-   aws-iam-authenticator help
+   aws-iam-authenticator version
    ```
 
 ## 3. Create your Amazon EKS Control Plane and Data Plane
@@ -96,13 +96,13 @@ sudo mv /tmp/eksctl /usr/local/bin
 Create a basic EKS cluster
 
 ```
-eksctl create cluster --name=<your cluster name> --region ap-southeast-1 --node-type t3.medium
+eksctl create cluster --name=<your cluster name> --region ap-southeast-1 --node-type t3.medium --managed
 
 ```
 
 A cluster will be created with default parameters
 
-  - 2x t3.medium nodes 
+  - 2x t3.medium nodes in a managed node group
   - use official AWS EKS AMI
   - ap-southeast-1 region
   - dedicated VPC (check your quotas)

@@ -1,0 +1,41 @@
+# gateway service
+apiVersion: appmesh.k8s.aws/v1beta1
+kind: VirtualService
+metadata:
+  name: colorgateway.default.svc.cluster.local
+  namespace: default
+spec:
+  meshName: appmesh-lab
+  routes:
+    - name: colorgateway-vr
+      http:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeName: colorgateway
+              weight: 1
+---
+# teller service
+apiVersion: appmesh.k8s.aws/v1beta1
+kind: VirtualService
+metadata:
+  name: colorteller.default.svc.cluster.local
+  namespace: default
+spec:
+  meshName: appmesh-lab
+  routes:
+    - name: colorteller-vr
+      http:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeName: colorteller
+              weight: 1
+            - virtualNodeName: colorteller-black
+              weight: 1
+            - virtualNodeName: colorteller-red
+              weight: 1
+            - virtualNodeName: colorteller-blue
+              weight: 1
