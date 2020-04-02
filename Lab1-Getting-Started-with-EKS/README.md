@@ -96,7 +96,8 @@ sudo mv /tmp/eksctl /usr/local/bin
 Create a basic EKS cluster
 
 ```
-eksctl create cluster --name=<your cluster name> --region ap-southeast-1 --node-type t3.medium --managed
+export CLUSTER=wayneeks
+eksctl create cluster --name=$CLUSTER --region ap-southeast-1 --node-type t3.medium --managed
 
 ```
 

@@ -8,8 +8,10 @@ metadata:
    service.beta.kubernetes.io/aws-load-balancer-type: nlb
 spec:
   ports:
-  - port: 80
-    name: http
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 9080
   selector:
     app: colorgateway
   type: LoadBalancer

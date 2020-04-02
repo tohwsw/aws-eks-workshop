@@ -47,11 +47,26 @@ docker push XXXXXXXXXXXX.dkr.ecr.ap-southeast-1.amazonaws.com/colorgateway:lates
 
 When you use AWS App Mesh with Kubernetes, you manage App Mesh resources, such as virtual services and virtual nodes, that align to Kubernetes resources, such as services and deployments. You also add the App Mesh sidecar container images to Kubernetes pod specifications. This tutorial guides you through the installation of the following open source components that automatically complete these tasks for you when you work with Kubernetes resources: 
 
-App Mesh control controller
+**App Mesh control controller**
 
-```
 Attach the AWSAppMeshFullAccess policy to the role that is attached to your Kubernetes worker nodes.
 
+```
+sudo yum install -y jq
+
+STACK_NAME=$(eksctl get nodegroup --cluster $CLUSTER -o json | jq -r '.[].StackName')
+
+ROLE_NAME=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME | jq -r '.StackResources[] | select(.ResourceType=="AWS::IAM::Role") | .PhysicalResourceId')
+
+echo "export ROLE_NAME=${ROLE_NAME}" | tee -a ~/.bash_profile
+
+aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn 'arn:aws:iam::aws:policy/AWSAppMeshFullAccess'
+
+```
+
+Deploy the APP Mesh controller
+
+```
 curl https://raw.githubusercontent.com/aws/aws-app-mesh-controller-for-k8s/master/deploy/all.yaml | kubectl apply -f -
 
 kubectl rollout status deployment app-mesh-controller -n appmesh-system
@@ -60,24 +75,18 @@ kubectl get crd
 
 ```
 
-App Mesh sidecar injector
+**App Mesh sidecar injector**
 
 ```
 export MESH_NAME=appmesh-lab
 
 export MESH_REGION=ap-southeast-1
 
-sudo yum install jq
-
 curl https://raw.githubusercontent.com/aws/aws-app-mesh-inject/master/scripts/install.sh | bash
 
 kubectl label namespace default appmesh.k8s.aws/sidecarInjectorWebhook=enabled
 
 ```
-
-IAM
-
-Add IAM managed policy AWSAppMeshFullAccess the eks nodegroup role.
 
 
 ## 6. Create AppMesh and the required configuration
@@ -117,13 +126,14 @@ To deploy the app, download colorapp.yml and and deploy it.
 
 ```
 curl -O https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/colorapp.yml
+
 ```
 
 **Important** You will need to update color.yaml with the ECR respository uri of your colorgateway and colorteller docker images.
 You can do so by substituting the account id 284245693010 with your own.
 
 ```
-sed 's/284245693010/<your account id>/g' colorapp.yml
+sed -i 's/284245693010/<your account id>/g' colorapp.yml
 
 ```
 
@@ -132,6 +142,7 @@ Next, deploy the applications.
 
 ```
 kubectl apply -f colorapp.yml
+
 ```
 
 You can verify that the pods are running properly.
@@ -147,20 +158,21 @@ kubectl get pods
 A network load balancer is also deployed. Identify the address of the elb via the command.
 
 ```
-kubectl get svc -o wide |grep colorgateway
+export NLB=$(kubectl get svc -o wide |grep colorgateway | awk '{print $4}')
+
 ```
 
 
 Next, paste the following to repeatedly request the colorgateway service. Remember to replace the address of the elb with your own. Do note that the elb might take a few minutes to become active.
 
 ```
-while [ 1 ]; do  curl -s --connect-timeout 2 http://ab384758a8e8a11e9ad6f0659aee8bfc-b3971974e877d5fd.elb.ap-southeast-1.amazonaws.com:/color;echo;sleep 1; done
+while [ 1 ]; do  curl -s --connect-timeout 2 $NLB:/color;echo;sleep 1; done
+
 ```
 
 You should see a different color is returned on each request. This is because colorgateway always forwards to colorteller, which via the colorteller-route, always routes to one of the color backends.
 
 Let’s modify the colorteller-route so it instead routes to the blue, red, and black colorteller virtual nodes, each at a 30% weighted ratio.
-
 
 If you look at the curler terminal, you should now see an equal distribution of traffic to the blue, red, and black virtual nodes. This shows that App Mesh is now controlling the distribution of traffic!
 
@@ -169,7 +181,7 @@ If you look at the curler terminal, you should now see an equal distribution of 
 To clean up the lab, please delete using the following command
 
 ```
-eksctl delete cluster --name=<name> --region=ap-southeast-1
+eksctl delete cluster --name=$CLUSTER --region=ap-southeast-1
 
 ```
 
