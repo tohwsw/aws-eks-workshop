@@ -8,7 +8,7 @@ metadata:
    service.beta.kubernetes.io/aws-load-balancer-type: nlb
 spec:
   ports:
-  - port: 9080
+  - port: 80
     name: http
   selector:
     app: colorgateway
