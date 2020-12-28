@@ -1,80 +1,51 @@
-apiVersion: appmesh.k8s.aws/v1beta1
+apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
   name: colorgateway
-  namespace: default
 spec:
-  meshName: appmesh-lab
+  podSelector:
+    matchLabels:
+      app: colorgateway
+  meshName: my-mesh
   listeners:
     - portMapping:
         port: 9080
         protocol: http
   serviceDiscovery:
     dns:
-      hostName: "colorgateway.default.svc.cluster.local"
-  backends:
-    - virtualService:
-        virtualServiceName: "colorteller.default.svc.cluster.local"
+      hostname: "colorgateway.my-apps.svc.cluster.local"
+
 ---
-apiVersion: appmesh.k8s.aws/v1beta1
+apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
   name: colorteller
-  namespace: default
 spec:
-  meshName: appmesh-lab
+  podSelector:
+    matchLabels:
+      app: colorteller
+  meshName: my-mesh
   listeners:
     - portMapping:
         port: 9080
         protocol: http
   serviceDiscovery:
     dns:
-      hostName: "colorteller.default.svc.cluster.local"
+      hostname: "colorteller.my-apps.svc.cluster.local"
 ---
-#black 
-apiVersion: appmesh.k8s.aws/v1beta1
+apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  name: colorteller-black
-  namespace: default
+  name: dnsutils
 spec:
-  meshName: appmesh-lab
+  podSelector:
+    matchLabels:
+      app: dnsutils
+  meshName: my-mesh
   listeners:
     - portMapping:
         port: 9080
         protocol: http
   serviceDiscovery:
     dns:
-      hostName: "colorteller-black.default.svc.cluster.local"
----
-#blue
-apiVersion: appmesh.k8s.aws/v1beta1
-kind: VirtualNode
-metadata:
-  name: colorteller-blue
-  namespace: default
-spec:
-  meshName: appmesh-lab
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-  serviceDiscovery:
-    dns:
-      hostName: "colorteller-blue.default.svc.cluster.local"
----
-#red
-apiVersion: appmesh.k8s.aws/v1beta1
-kind: VirtualNode
-metadata:
-  name: colorteller-red
-  namespace: default
-spec:
-  meshName: appmesh-lab
-  listeners:
-    - portMapping:
-        port: 9080
-        protocol: http
-  serviceDiscovery:
-    dns:
-      hostName: "colorteller-red.default.svc.cluster.local"
+      hostname: "dnsutils.my-apps.svc.cluster.local"

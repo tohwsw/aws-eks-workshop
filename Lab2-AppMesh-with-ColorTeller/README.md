@@ -1,4 +1,4 @@
-This lab builds upon lab 1
+This lab builds upon lab 1. This has been updated to use appmesh.k8s.aws/v1beta2
 
 
 ## 5. Build the Docker Images and push them to ECR
@@ -49,44 +49,48 @@ When you use AWS App Mesh with Kubernetes, you manage App Mesh resources, such a
 
 **App Mesh control controller**
 
-Attach the AWSAppMeshFullAccess policy to the role that is attached to your Kubernetes worker nodes.
+Install the integration components
 
 ```
-sudo yum install -y jq
+curl -o pre_upgrade_check.sh https://raw.githubusercontent.com/aws/eks-charts/master/stable/appmesh-controller/upgrade/pre_upgrade_check.sh
+./pre_upgrade_check.sh
 
-STACK_NAME=$(eksctl get nodegroup --cluster $CLUSTER -o json | jq -r '.[].StackName')
+helm repo add eks https://aws.github.io/eks-charts
 
-ROLE_NAME=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME | jq -r '.StackResources[] | select(.ResourceType=="AWS::IAM::Role") | .PhysicalResourceId')
+kubectl apply -k "https://github.com/aws/eks-charts/stable/appmesh-controller/crds?ref=master"
 
-echo "export ROLE_NAME=${ROLE_NAME}" | tee -a ~/.bash_profile
+kubectl create ns appmesh-system
 
-aws iam attach-role-policy --role-name $ROLE_NAME --policy-arn 'arn:aws:iam::aws:policy/AWSAppMeshFullAccess'
+export CLUSTER_NAME=cluster-name
+export AWS_REGION=ap-southeast-1
+
+eksctl utils associate-iam-oidc-provider \
+    --region=$AWS_REGION \
+    --cluster $CLUSTER_NAME \
+    --approve
+
+eksctl create iamserviceaccount \
+    --cluster $CLUSTER_NAME \
+    --namespace appmesh-system \
+    --name appmesh-controller \
+    --attach-policy-arn  arn:aws:iam::aws:policy/AWSCloudMapFullAccess,arn:aws:iam::aws:policy/AWSAppMeshFullAccess \
+    --override-existing-serviceaccounts \
+    --approve
 
 ```
 
 Deploy the APP Mesh controller
 
 ```
-curl https://raw.githubusercontent.com/aws/aws-app-mesh-controller-for-k8s/master/deploy/all.yaml | kubectl apply -f -
-
-kubectl rollout status deployment app-mesh-controller -n appmesh-system
-
-kubectl get crd
-
-```
-
-**App Mesh sidecar injector**
+helm upgrade -i appmesh-controller eks/appmesh-controller \
+    --namespace appmesh-system \
+    --set region=$AWS_REGION \
+    --set serviceAccount.create=false \
+    --set serviceAccount.name=appmesh-controller
 
 ```
-export MESH_NAME=appmesh-lab
 
-export MESH_REGION=ap-southeast-1
 
-curl https://raw.githubusercontent.com/aws/aws-app-mesh-inject/master/scripts/install.sh | bash
-
-kubectl label namespace default appmesh.k8s.aws/sidecarInjectorWebhook=enabled
-
-```
 
 
 ## 6. Create AppMesh and the required configuration
@@ -100,7 +104,14 @@ The following diagram represents the abstract view in terms of App Mesh resource
 Create the App Mesh
 
 ```
-curl https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/appmesh.yml | kubectl apply -f -
+curl https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/mesh.yml | kubectl apply -f -
+
+```
+
+Create the Namespace
+
+```
+curl https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/namespace.yml | kubectl apply -f -
 
 ```
 
@@ -115,6 +126,13 @@ Create the virtual service
 
 ```
 curl https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/virtualservice.yml | kubectl apply -f -
+
+```
+
+Create the virtual router
+
+```
+curl https://raw.githubusercontent.com/tohwsw/aws-eks-workshop/master/Lab2-AppMesh-with-ColorTeller/virtualrouter.yml | kubectl apply -f -
 
 ```
 

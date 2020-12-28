@@ -1,0 +1,43 @@
+# gateway service
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: colorgateway-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  routes:
+    - name: route-to-gateway
+      httpRoute:
+        match:
+          prefix: /color
+        action:
+          weightedTargets:
+            - virtualNodeRef: 
+                namespace: my-apps
+                name: colorgateway
+              weight: 1
+---
+# teller service
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualRouter
+metadata:
+  name: colorteller-vr
+spec:
+  listeners:
+    - portMapping:
+        port: 9080
+        protocol: http
+  routes:
+    - name: route-to-teller
+      httpRoute:
+        match:
+          prefix: /
+        action:
+          weightedTargets:
+            - virtualNodeRef:
+                namespace: my-apps
+                name: colorteller
+              weight: 1
